@@ -1,0 +1,29 @@
+#+TITLE: TableOfElements.jl
+#+AUTHOR: Stefanos Carlström
+#+EMAIL: stefanos.carlstrom@gmail.com
+#+PROPERTY: header-args:julia :session *table-of-elements:jl*
+
+Periodic table of elements data (shamelessly stolen from
+[[https://github.com/andrejewski/periodic-table]]).
+
+* Example usage
+  #+BEGIN_SRC julia :exports code
+    using TableOfElements
+  #+END_SRC
+
+  #+RESULTS:
+  : nothing
+
+  #+BEGIN_SRC julia :exports both :results output
+    get_element("H")
+  #+END_SRC
+
+  #+RESULTS:
+  : TableOfElements.Element("Hydrogen","H",1,1.00794,1s,1312,13.5976992)
+
+  #+BEGIN_SRC julia :exports both :results output
+    get_element(18)
+  #+END_SRC
+
+  #+RESULTS:
+  : TableOfElements.Element("Argon","Ar",18,39.948,1s²ᶜ2s²ᶜ2p⁶ᶜ3s²3p⁶,1521,15.763796099999999)
