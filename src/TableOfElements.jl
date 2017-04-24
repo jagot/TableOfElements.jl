@@ -56,6 +56,19 @@ get_element(Z::Integer) = data.elements[Z]
 get_element(symbol::String) = get_element(data.Z[ucfirst(symbol)])
 get_element(symbol::Symbol) = get_element("$(symbol)")
 
-export get_element
+import Base: show
+function show(stream::IO, element::Element)
+    write(stream,
+          @sprintf("%s [%s], Z = %i, mass = %.2f",
+                   element.name, element.symbol,
+                   element.Z, element.mass))
+    if !isnan(element.Ip)
+        write(stream,
+              @sprintf(", Ip = %.2f kJ/mol = %.2f eV",
+                       element.Ip, element.Ip_eV))
+    end
+end
+
+export get_element, show
 
 end # module

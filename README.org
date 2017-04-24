@@ -14,16 +14,16 @@ Periodic table of elements data (shamelessly stolen from
   #+RESULTS:
   : nothing
 
-  #+BEGIN_SRC julia :exports both :results output
+  #+BEGIN_SRC julia :exports both
     get_element("H")
   #+END_SRC
 
   #+RESULTS:
-  : TableOfElements.Element("Hydrogen","H",1,1.00794,1s,1312,13.5976992)
+  | Hydrogen [H] | Z = 1 | mass = 1.01 | Ip = 1312.00 kJ/mol = 13.60 eV |
 
-  #+BEGIN_SRC julia :exports both :results output
+  #+BEGIN_SRC julia :exports both
     get_element(18)
   #+END_SRC
 
   #+RESULTS:
-  : TableOfElements.Element("Argon","Ar",18,39.948,1s²ᶜ2s²ᶜ2p⁶ᶜ3s²3p⁶,1521,15.763796099999999)
+  | Argon [Ar] | Z = 18 | mass = 39.95 | Ip = 1521.00 kJ/mol = 15.76 eV |
