@@ -1,8 +1,9 @@
 module TableOfElements
 using JSON
 using AtomicLevels
+using Printf
 
-type Element
+struct Element
     name::String
     symbol::String
     Z::Integer
@@ -12,7 +13,7 @@ type Element
     Ip_eV::Real
 end
 
-type ElementsTable
+struct ElementsTable
     elements::Vector{Element}
     Z::Dict{String,Integer}
 end
@@ -23,8 +24,9 @@ function _load_table_of_elements()
     elements = map(JSON.parsefile(joinpath(dirname(@__FILE__), "../data/data.json"))) do element
         mstr = element["atomicMass"]
         mass = if typeof(mstr) <: String
-            if ismatch(mp, mstr)
-                parse(Float64, match(mp, mstr)[1])
+            m = match(mp, mstr)
+            if m != nothing
+                parse(Float64, m[1])
             else
                 Inf
             end
@@ -40,7 +42,7 @@ function _load_table_of_elements()
             element["ionizationEnergy"]
         end
 
-        conf = ref_set_list(replace(element["electronicConfiguration"], ".", " "))
+        conf = ref_set_list(replace(element["electronicConfiguration"], "." => " "))
         symbol = element["symbol"]
         ZZ = element["atomicNumber"]
         Z[symbol] = ZZ
