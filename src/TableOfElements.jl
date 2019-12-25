@@ -1,6 +1,7 @@
 module TableOfElements
 using JSON
 using AtomicLevels
+using Unicode
 using Printf
 
 struct Element
@@ -8,7 +9,7 @@ struct Element
     symbol::String
     Z::Integer
     mass::Real # amu
-    conf::Config
+    conf::Configuration
     Ip::Real
     Ip_eV::Real
 end
@@ -42,7 +43,8 @@ function _load_table_of_elements()
             element["ionizationEnergy"]
         end
 
-        conf = ref_set_list(replace(element["electronicConfiguration"], "." => " "))
+        conf = parse(Configuration{Orbital},
+                     replace(element["electronicConfiguration"], "." => " "))
         symbol = element["symbol"]
         ZZ = element["atomicNumber"]
         Z[symbol] = ZZ
@@ -55,7 +57,7 @@ end
 const data = _load_table_of_elements()
 
 get_element(Z::Integer) = data.elements[Z]
-get_element(symbol::String) = get_element(data.Z[ucfirst(symbol)])
+get_element(symbol::String) = get_element(data.Z[titlecase(symbol)])
 get_element(symbol::Symbol) = get_element("$(symbol)")
 
 import Base: show
