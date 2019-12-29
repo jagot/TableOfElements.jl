@@ -19,7 +19,7 @@ Periodic table of elements data (shamelessly stolen from
   #+END_SRC
 
   #+RESULTS:
-  | Hydrogen [H] | Z = 1 | mass = 1.01 | Ip = 1312.00 kJ/mol = 13.60 eV |
+  | Hydrogen [H] | Z = 1 | mass = 1.01 | Ip = 1312.00 kJ/mol = 13.60 eV | χ = 2.20 |
 
   #+BEGIN_SRC julia :exports both
     get_element(18)

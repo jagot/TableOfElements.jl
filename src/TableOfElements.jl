@@ -7,21 +7,22 @@ using Printf
 struct Element
     name::String
     symbol::String
-    Z::Integer
-    mass::Real # amu
+    Z::Int
+    mass::Float64 # amu
     conf::Configuration
-    Ip::Real
-    Ip_eV::Real
+    Ip::Float64
+    Ip_eV::Float64
+    χ::Float64 # Pauling units
 end
 
 struct ElementsTable
     elements::Vector{Element}
-    Z::Dict{String,Integer}
+    Z::Dict{String,Int}
 end
 
 function _load_table_of_elements()
     mp = r"([0-9\.]+)\([0-9]+\)"
-    Z = Dict{String,Integer}()
+    Z = Dict{String,Int}()
     elements = map(JSON.parsefile(joinpath(dirname(@__FILE__), "../data/data.json"))) do element
         mstr = element["atomicMass"]
         mass = if typeof(mstr) <: String
@@ -37,11 +38,11 @@ function _load_table_of_elements()
             Inf
         end
 
-        Ip = if element["ionizationEnergy"]==""
-            NaN
-        else
-            element["ionizationEnergy"]
-        end
+        getvalue(name, default=NaN) = (name in keys(element) && element[name] ≠ "" ?
+                                       element[name] : default)
+
+        Ip = getvalue("ionizationEnergy")
+        χ = getvalue("electronegativity")
 
         conf = parse(Configuration{Orbital},
                      replace(element["electronicConfiguration"], "." => " "))
@@ -49,7 +50,7 @@ function _load_table_of_elements()
         ZZ = element["atomicNumber"]
         Z[symbol] = ZZ
         Element(element["name"], symbol, ZZ,
-                mass, conf, Ip, 0.01036410Ip)
+                mass, conf, Ip, 0.01036410Ip, χ)
     end
     ElementsTable(elements, Z)
 end
@@ -66,11 +67,12 @@ function show(stream::IO, element::Element)
           @sprintf("%s [%s], Z = %i, mass = %.2f",
                    element.name, element.symbol,
                    element.Z, element.mass))
-    if !isnan(element.Ip)
+    !isnan(element.Ip) &&
         write(stream,
               @sprintf(", Ip = %.2f kJ/mol = %.2f eV",
                        element.Ip, element.Ip_eV))
-    end
+    !isnan(element.χ) &&
+        write(stream, @sprintf(", χ = %.2f", element.χ))
 end
 
 export get_element, show
